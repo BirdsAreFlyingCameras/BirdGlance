@@ -69,7 +69,6 @@ def WebsiteInput():
 
         HOSTNAMEFORIP = o.hostname
 
-
     GetHostName()
 
     def GetWebsiteIP():
@@ -91,10 +90,8 @@ def WebsiteInput():
             IPinfoCountry = json.loads(GetIpInfoCountry.text)
             IPinfoCountry = json.dumps(IPinfoCountry)
 
-            IPinfoCountryOutput = IPinfoCountry.replace("{", "").replace("}", "").replace(":", "")\
+            IPinfoCountryOutput = IPinfoCountry.replace("{", "").replace("}", "").replace(":", "") \
                 .replace("country", "").replace('"', "")
-
-
 
         Country()
 
@@ -107,7 +104,7 @@ def WebsiteInput():
             IPinfoStateOrRegion = json.loads(GetIpInfoStateOrRegion.text)
             IPinfoStateOrRegion = json.dumps(IPinfoStateOrRegion)
 
-            IPinfoStateOrRegionOutput = IPinfoStateOrRegion.replace("{", "").replace("}", "").replace(":", "")\
+            IPinfoStateOrRegionOutput = IPinfoStateOrRegion.replace("{", "").replace("}", "").replace(":", "") \
                 .replace("regionName", "").replace('"', "")
 
         StateOrRegion()
@@ -121,7 +118,7 @@ def WebsiteInput():
             IPinfoCity = json.loads(GetIpInfoCity.text)
             IPinfoCity = json.dumps(IPinfoCity)
 
-            IPinfoCityOutput = IPinfoCity.replace("{", "").replace("}", "").replace(":", "")\
+            IPinfoCityOutput = IPinfoCity.replace("{", "").replace("}", "").replace(":", "") \
                 .replace("city", "").replace('"', "")
 
         City()
@@ -135,7 +132,7 @@ def WebsiteInput():
             IPinfoISP = json.loads(GetIPinfoISP.text)
             IPinfoISP = json.dumps(IPinfoISP)
 
-            IPinfoISPOutput = IPinfoISP.replace("{", "").replace("}", "").replace(":", "")\
+            IPinfoISPOutput = IPinfoISP.replace("{", "").replace("}", "").replace(":", "") \
                 .replace("isp", "").replace('"', "")
 
         ISP()
@@ -148,8 +145,27 @@ def WebsiteInput():
             print("State or Region:" + IPinfoStateOrRegionOutput)
             print("City:" + IPinfoCityOutput)
 
-
         InfoOutput()
+
+        def InfoOutputTXT():
+
+
+            HOSTNAMEFORTXT = HOSTNAMEFORIP.replace("www.", "").replace(".com", "")
+
+            output = [
+
+                "Hostname: " + HOSTNAMEFORIP, "\n",
+                "IP Address: " + WebSiteIP, "\n",
+                "ISP:" + IPinfoISPOutput, "\n",
+                "Country:" + IPinfoCountryOutput, "\n",
+                "State or Region:" + IPinfoStateOrRegionOutput, "\n",
+                "City:" + IPinfoCityOutput, "\n"
+            ]
+
+            with open(HOSTNAMEFORTXT + '.txt', 'w') as file:
+                file.writelines(output)
+
+        InfoOutputTXT()
 
     GetWebsiteIPInfo()
 
