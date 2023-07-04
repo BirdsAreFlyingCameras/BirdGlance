@@ -29,7 +29,7 @@ def WebsiteInput():
             getreqstatus = requests.get(url=URLHTTP)
 
             if getreqstatus.status_code == 200:
-                print(URLHTTP + " is valid")
+                print(URLHTTP + " returned status code 200")
 
                 HTTPValid = True
 
@@ -45,7 +45,7 @@ def WebsiteInput():
             getreqstatus = requests.get(url=URLHTTPS)
 
             if getreqstatus.status_code == 200:
-                print(URLHTTPS + " is valid")
+                print(URLHTTPS + " returned status code 200")
 
                 HTTPSValid = True
 
@@ -69,7 +69,6 @@ def WebsiteInput():
 
         HOSTNAMEFORIP = o.hostname
 
-        print(HOSTNAMEFORIP)
 
     GetHostName()
 
@@ -85,56 +84,70 @@ def WebsiteInput():
 
         def Country():
             global IPinfoCountry
+            global IPinfoCountryOutput
 
             GetIpInfoCountry = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=1")
 
             IPinfoCountry = json.loads(GetIpInfoCountry.text)
             IPinfoCountry = json.dumps(IPinfoCountry)
 
+            IPinfoCountryOutput = IPinfoCountry.replace("{", "").replace("}", "").replace(":", "")\
+                .replace("country", "").replace('"', "")
+
+
 
         Country()
 
         def StateOrRegion():
             global IPinfoStateOrRegion
+            global IPinfoStateOrRegionOutput
 
             GetIpInfoStateOrRegion = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=8")
 
             IPinfoStateOrRegion = json.loads(GetIpInfoStateOrRegion.text)
             IPinfoStateOrRegion = json.dumps(IPinfoStateOrRegion)
 
+            IPinfoStateOrRegionOutput = IPinfoStateOrRegion.replace("{", "").replace("}", "").replace(":", "")\
+                .replace("regionName", "").replace('"', "")
 
         StateOrRegion()
 
         def City():
             global IPinfoCity
+            global IPinfoCityOutput
 
             GetIpInfoCity = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=16")
 
             IPinfoCity = json.loads(GetIpInfoCity.text)
             IPinfoCity = json.dumps(IPinfoCity)
 
+            IPinfoCityOutput = IPinfoCity.replace("{", "").replace("}", "").replace(":", "")\
+                .replace("city", "").replace('"', "")
 
         City()
 
         def ISP():
             global IPinfoISP
+            global IPinfoISPOutput
 
             GetIPinfoISP = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=512")
 
             IPinfoISP = json.loads(GetIPinfoISP.text)
-
             IPinfoISP = json.dumps(IPinfoISP)
 
+            IPinfoISPOutput = IPinfoISP.replace("{", "").replace("}", "").replace(":", "")\
+                .replace("isp", "").replace('"', "")
 
         ISP()
 
         def InfoOutput():
+            print("Hostname:" + HOSTNAMEFORIP)
+            print("IP Address: " + WebSiteIP)
+            print("ISP:" + IPinfoISPOutput)
+            print("Country:" + IPinfoCountryOutput)
+            print("State or Region:" + IPinfoStateOrRegionOutput)
+            print("City:" + IPinfoCityOutput)
 
-            print(IPinfoCountry)
-            print(IPinfoStateOrRegion)
-            print(IPinfoCity)
-            print(IPinfoISP)
-            print(WebSiteIP)
 
         InfoOutput()
 
