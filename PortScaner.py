@@ -2,21 +2,26 @@ import socket
 import threading as t
 import time
 import colorama
+import sys
 
-colorama.init()
-
-print(colorama.Fore.RED)
-
-print(colorama.Style.BRIGHT)
-
-CommonPortOutputList = []
-UnknownPortOutputList = []
-
-OpenPortsListFilteredAndDone = []
-
+start_time = time.time()
 host = "google.com"
+class colors:
+    colorama.init()
+    print(colorama.Fore.RED)
+    print(colorama.Style.BRIGHT)
 
-CommonPortsList = {
+class ListsAndDicts:
+    global OpenPortsList
+    global CommonPortsList
+    global CommonPortOutputList
+    global UnknownPortOutputList
+    global OpenPortsListFilteredAndDone
+    CommonPortOutputList = []
+    UnknownPortOutputList = []
+    OpenPortsList = []
+    OpenPortsListFilteredAndDone = []
+    CommonPortsList = {
     1: 'TCPMUX',
     5: 'RJE',
     7: 'ECHO',
@@ -97,6 +102,7 @@ CommonPortsList = {
     3690: 'SVN',
     4333: 'mSQL',
     4444: 'Metasploit',
+    5060: 'SIP',
     5432: 'PostgreSQL',
     5900: 'VNC',
     5984: 'CouchDB',
@@ -123,75 +129,115 @@ CommonPortsList = {
     7077: 'Apache Spark'
 }
 
-OpenPortsList = []
 
 
-def FullScan(port):
-    global OpenPortsList  # tell Python we're using the global list
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.settimeout(1)
-    try:
-        s.connect((host, port))
-        OpenPortsList.append(port)
 
-    except:
-        pass
-    finally:
-        s.close()
+def Scan():
+    def FullScan(port):
+        global OpenPortsList  # tell Python we're using the global list
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(1)
+        try:
+            s.connect((host, port))
+            OpenPortsList.append(port)
+
+        except:
+            pass
+        finally:
+            s.close()
 
 
-if 1 == 1:
-    for port in range(0, 65536):
+    for port in range(0, 500):
         thread = t.Thread(target=FullScan, args=(port,))
         thread.start()
 
-
-def Outputs():
-
-    def PortsCheck():
-        for port in OpenPortsList:
-            if port in CommonPortsList:
-                CommonPortOutput = (f"port {port} is open this port is used for", CommonPortsList.get(port))
-                CommonPortOutputList.append(CommonPortOutput)
-            else:
-                UnknownPortOutput = (f"Port {port} is open its use can not be identified by this program")
-                UnknownPortOutputList.append(UnknownPortOutput)
+    FullScan(port)
 
 
-    def ConsoleOutput():
+    def Outputs():
 
-        global CommonPortOutputFiltered
-        global CommonPortOutputFilteredDone
-
-        for i in (CommonPortOutputList):
-
-            CommonPortOutputFiltered = f"{i}"
-
-            CommonPortOutputFilteredDone =(CommonPortOutputFiltered.replace("[","").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", ""))
-
-            print(CommonPortOutputFilteredDone)
-
-        for i in (UnknownPortOutputList):
-            UnknownPortOutputFiltered = f"{i}"
-
-            print(UnknownPortOutputFiltered.replace("[", "").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", ""))
-
-    PortsCheck()
-    ConsoleOutput()
-
-    def TxtOutput():
-        with open('Ports.txt', 'w') as file:
-            for CommonPortOutput in CommonPortOutputList:
-                filtered_output = str(CommonPortOutput).replace("[", "").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", "")
-                file.write(filtered_output + '\n')
-
-            for UnknownPortOutput in UnknownPortOutputList:
-                FilteredOutputU = str(UnknownPortOutput).replace("[", "").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", "")
-                file.write(FilteredOutputU + '\n')
+        def PortsCheck():
+            for port in OpenPortsList:
+                if port in CommonPortsList:
+                    CommonPortOutput = (f"port {port} is open this port is used for", CommonPortsList.get(port))
+                    CommonPortOutputList.append(CommonPortOutput)
+                else:
+                    UnknownPortOutput = (f"Port {port} is open its use can not be identified by this program")
+                    UnknownPortOutputList.append(UnknownPortOutput)
 
 
+        def ConsoleOutput():
+            global CommonPortOutputFiltered
+            global CommonPortOutputFilteredDone
 
-    TxtOutput()
+            for i in (CommonPortOutputList):
 
-FullScan(port)
-Outputs()
+                CommonPortOutputFiltered = f"{i}"
+
+                CommonPortOutputFilteredDone =(CommonPortOutputFiltered.replace("[","").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", ""))
+
+                print(CommonPortOutputFilteredDone + "\n")
+
+
+            for i in (UnknownPortOutputList):
+                UnknownPortOutputFiltered = f"{i}"
+
+                UnknownPortOutputFilteredDone = (UnknownPortOutputFiltered.replace("[", "").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", ""))
+
+                print(UnknownPortOutputFilteredDone + "\n")
+
+        PortsCheck()
+        ConsoleOutput()
+
+        def TxtOutput():
+            with open('Ports.txt', 'w') as file:
+                for CommonPortOutput in CommonPortOutputList:
+                    FilteredOutput = str(CommonPortOutput).replace("[", "").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", "")
+
+                    file.write(FilteredOutput + '\n' + '\n')
+
+
+                for UnknownPortOutput in UnknownPortOutputList:
+                    FilteredOutputU = str(UnknownPortOutput).replace("[", "").replace("]", "").replace("'", "").replace(",","").replace("(", "").replace(")", "")
+                    file.write(FilteredOutputU + '\n' + '\n')
+
+                file.write("The scan took " + str((time.time() - start_time)/60) + " min to complete" + '\n' + '\n')
+
+        TxtOutput()
+    Outputs()
+
+
+
+def Loading():
+    global LoadText
+    global WordToSay
+    LoadText = [
+        "|",
+        "/",
+        "-",
+        "\\",
+        "|",
+        "/",
+        "-",
+        "\\"
+    ]
+    WordToSay = "Working"
+
+    while t1.is_alive() == True:
+        for i in LoadText:
+            print(f'\r {WordToSay} {i}', end='')
+            time.sleep(0.4)
+            print(f'\b' * len(f'\r {WordToSay} {i}'), end='')
+            time.sleep(0.1)
+
+t1 = t.Thread(target=Scan)
+
+t1.start()
+
+t2 = t.Thread(target=Loading)
+
+t2.start()
+
+t1.join()
+t2.join()
+
