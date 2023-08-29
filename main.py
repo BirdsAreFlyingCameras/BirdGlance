@@ -192,7 +192,7 @@ def Main():
 
     BasicInfo()
 
-    def PortScaner():
+    #def PortScaner():
 
 
 Main()
