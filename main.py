@@ -4,13 +4,14 @@ import json
 from urllib.parse import urlparse
 from dns.resolver import *
 
-SpecialCharacters = [
-    '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-',
-    '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^',
-    '_', '`', '{', '|', '}', '~'
-]
-
 def Main():
+
+    SpecialCharacters = [
+        '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-',
+        '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^',
+        '_', '`', '{', '|', '}', '~'
+    ]
+
     URL = input("Website URL: ")  # Takes the url that will be used in the search's
 
     def BasicInfo():
