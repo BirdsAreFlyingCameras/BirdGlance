@@ -2,34 +2,84 @@ import requests
 import socket as s
 import json
 from urllib.parse import urlparse
+from dns.resolver import *
 
+SpecialCharacters = [
+    '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-',
+    '.', '/', ':', ';', '<', '=', '>', '?', '@', '[', '\\', ']', '^',
+    '_', '`', '{', '|', '}', '~'
+]
 
 def Main():
-    URL = input("Website URL: ")  # Takes the url that will be used in the search's
+    #URL = input("Website URL: ")  # Takes the url that will be used in the search's
+
+    URL = "https://www.chess.com"
     def BasicInfo():
         def Stage1():
+            def FetchTLDS():
+
+                global TLDSs
+                global TLDS
+
+
+                TLDSs = "https://data.iana.org/TLD/tlds-alpha-by-domain.txt"
+                response = requests.get(TLDSs)
+                response.raise_for_status()
+
+                # The file uses line breaks for each TLD, and we filter out comments which start with '#'
+                TLDS = [line.strip().lower() for line in response.text.splitlines() if not line.startswith('#')]
+
+            FetchTLDS()
+
+            def IsURLAnIP():
+                global IsURLAnIPOutput
+
+                try:
+                    s.inet_aton(URL)
+                    IsURLAnIPOutput = True
+                    if IsURLAnIPOutput == True:
+                        print("URL is an IP address")
+                except s.error:
+                    IsURLAnIPOutput = False
+                    if IsURLAnIPOutput == False:
+                        print("URL is not an IP address")
+
+            IsURLAnIP()
 
             def refactor(URL):  # defines the refactor function and passes the URL variable as a parameter
-
                 global URLHTTPS, URLHTTP  # Sets the variables URL HTTPS and URL HTTP to global variables meaning they can be called outside of this function.
+                global TLDSValid
+                TLDSValid = False
+                for i in "https://", "http://":
+                    if URL.startswith(i):
+                        if i == "https://":
+                            URLHTTPS = URL
+                            URLHTTP = URL.replace("https://", "http://")
+                        if i == "http//":
+                            URLHTTP = URL
+                            URLHTTPS = URL.replace("http://", "https://")
+                        break
+                    else:
+                        URLHTTP = "http://" + URL
+                        URLHTTPS = "https://" + URL
 
-                if URL.startswith(
-                        'https://'):  # Checks if the URL variable starts with https:// .startswith method bulit into python.
+                for i in TLDS:
+                    if URL.endswith("/"):
+                        URL = URL[:-1]
+                    if URL.endswith(i):
+                        TLDSValid = True
+                        print("URL has a valid TLDS (.com,.org, etc.)")
+                        break
 
-                    URLHTTPS = URL  # If the URL variable starts with https:// it sets the value of the variable URLHTTPS to the value of the variable URL
+                if TLDSValid is False:
+                    input("URL does not have a valid TLDS Do you want to continue? [Y/N] ")
+                    if input == "y" or "Y":
+                        print("Continuing...")
+                    else:
+                        print("Exiting...")
+                        exit()
 
-                else:
-
-                    URLHTTPS = "https://" + URL  # if the variable URL does not start with https:// it will add https:// before URL and set that value to the variable URLHTTPS
-
-                if URL.startswith('http://'):
-
-                    URLHTTP = URL  # If the URL variable starts with http:// it sets the value of the variable URLHTTP to the value of the variable URL
-
-                else:
-                    URLHTTP = "http://" + URL  # if the variable URL does not start with http:// it will add http:// before URL and set that value to the variable URLHTTP
-
-            refactor(URL) # Calls the refactor function with the parameter URL
+            refactor(URL)  # Calls the refactor function with the parameter URL
 
             def Checks():
 
@@ -37,15 +87,15 @@ def Main():
 
                     global HTTPValid
 
-                    getreqstatus = requests.get(url=URLHTTP)
+                    GetReqStatus = requests.get(url=URLHTTP)
 
-                    if getreqstatus.status_code == 200:
+                    if GetReqStatus.status_code == 200:
                         print(URLHTTP + " returned status code 200")
 
                         HTTPValid = True
 
                     else:
-                        print("URL is not valid")
+                        print(f"{URL} is not a valid URL")
 
                         HTTPValid = False
 
@@ -60,10 +110,8 @@ def Main():
 
                         HTTPSValid = True
 
-
-
                     else:
-                        print("URL is not valid")
+                        print(f"{URL} is not a valid URL")
 
                         HTTPSValid = False
 
@@ -77,20 +125,20 @@ def Main():
         def Stage2():
 
             def GetHostName():
-                global HOSTNAMEFORIP
+                global HostnameForIP
 
                 o = urlparse(URLHTTP)
-
-                HOSTNAMEFORIP = o.hostname
+                HostnameForIP = o.hostname
 
             GetHostName()
 
             def GetWebSiteIP():
                 global WebSiteIP
 
-                WebSiteIP = s.gethostbyname(HOSTNAMEFORIP)
+                WebSiteIP = s.gethostbyname(HostnameForIP)
 
             GetWebSiteIP()
+
 
         Stage2()
 
@@ -159,7 +207,7 @@ def Main():
         def Stage4():
             def Output():
                 def InfoOutput():
-                    print("Hostname:" + HOSTNAMEFORIP)
+                    print("Hostname:" + HostnameForIP)
                     print("IP Address: " + WebSiteIP)
                     print("ISP:" + IPinfoISPOutput)
                     print("Country:" + IPinfoCountryOutput)
@@ -169,11 +217,11 @@ def Main():
                 InfoOutput()
 
                 def InfoOutputTXT():
-                    HOSTNAMEFORTXT = HOSTNAMEFORIP.replace("www.", "").replace(".com", "")
+                    HOSTNAMEFORTXT = HostnameForIP.replace("www.", "").replace(".com", "")
 
                     output = [
 
-                        "Hostname: " + HOSTNAMEFORIP, "\n",
+                        "Hostname: " + HostnameForIP, "\n",
                         "IP Address: " + WebSiteIP, "\n",
                         "ISP:" + IPinfoISPOutput, "\n",
                         "Country:" + IPinfoCountryOutput, "\n",
@@ -191,8 +239,5 @@ def Main():
         Stage4()
 
     BasicInfo()
-
-    def PortScaner():
-
 
 Main()
