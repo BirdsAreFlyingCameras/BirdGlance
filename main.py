@@ -11,9 +11,8 @@ SpecialCharacters = [
 ]
 
 def Main():
-    #URL = input("Website URL: ")  # Takes the url that will be used in the search's
+    URL = input("Website URL: ")  # Takes the url that will be used in the search's
 
-    URL = "https://www.chess.com"
     def BasicInfo():
         def Stage1():
             def FetchTLDS():
