@@ -4,6 +4,31 @@ import json
 from urllib.parse import urlparse
 from dns.resolver import *
 
+from colorama import init, Fore, Back, Style
+
+
+class colors:
+    global CG, CR, CY, CW, CC, CM, TB
+    init(autoreset=True)
+    CG = Fore.GREEN
+    CR = Fore.RED
+    CY = Fore.YELLOW
+    CW = Fore.WHITE
+    CC = Fore.CYAN
+    CM = Fore.MAGENTA
+    TB = Style.BRIGHT
+
+
+class Stamps:
+    global Info, Warn, Output, Input, Error
+    Info = f'{CG}{TB}[INFO]{Fore.RESET}'
+    Warn = f'{CY}{TB}[WARRING]{Fore.RESET}'
+    Output = f'{CC}{TB}[OUTPUT]{Fore.RESET}'
+    Input = f'{CM}{TB}[INPUT]{Fore.RESET}'
+    Error = f'{CR}{TB}[ERROR]{Fore.RESET}'
+
+
+
 def Main():
 
     SpecialCharacters = [
@@ -12,8 +37,8 @@ def Main():
         '_', '`', '{', '|', '}', '~'
     ]
 
-    URL = input("Website URL: ")  # Takes the url that will be used in the search's
-
+    URL = input(f"{Input} Website URL: ")  # Takes the url that will be used in the search's
+    print('\n')
     def BasicInfo():
         def Stage1():
             def FetchTLDS():
@@ -38,11 +63,11 @@ def Main():
                     s.inet_aton(URL)
                     IsURLAnIPOutput = True
                     if IsURLAnIPOutput == True:
-                        print("URL is an IP address")
+                        print(f"{Info} URL is an IP address")
                 except s.error:
                     IsURLAnIPOutput = False
                     if IsURLAnIPOutput == False:
-                        print("URL is not an IP address")
+                        print(f"{Info} URL is not an IP address")
 
             IsURLAnIP()
 
@@ -68,7 +93,7 @@ def Main():
                         URL = URL[:-1]
                     if URL.endswith(i):
                         TLDSValid = True
-                        print("URL has a valid TLDS (.com,.org, etc.)")
+                        print(f"{Info} URL has a valid TLDS (.com,.org, etc.)")
                         break
 
                 if TLDSValid is False:
@@ -90,7 +115,7 @@ def Main():
                     GetReqStatus = requests.get(url=URLHTTP)
 
                     if GetReqStatus.status_code == 200:
-                        print(URLHTTP + " returned status code 200")
+                        print(f"{Info} HTTP Valid")
 
                         HTTPValid = True
 
@@ -106,7 +131,7 @@ def Main():
                     getreqstatus = requests.get(url=URLHTTPS)
 
                     if getreqstatus.status_code == 200:
-                        print(URLHTTPS + " returned status code 200")
+                        print(f"{Info} HTTPS Valid")
 
                         HTTPSValid = True
 
@@ -207,12 +232,14 @@ def Main():
         def Stage4():
             def Output():
                 def InfoOutput():
-                    print("Hostname:" + HostnameForIP)
-                    print("IP Address: " + WebSiteIP)
-                    print("ISP:" + IPinfoISPOutput)
-                    print("Country:" + IPinfoCountryOutput)
-                    print("State or Region:" + IPinfoStateOrRegionOutput)
-                    print("City:" + IPinfoCityOutput)
+                    global Info, Warn, Output, Input, Error
+                    print('\n')
+                    print(f"{Output} Hostname: {HostnameForIP}")
+                    print(f"{Output} IP Address:{WebSiteIP}")
+                    print(f"{Output} ISP:{IPinfoISPOutput}")
+                    print(f"{Output} Country:{IPinfoCountryOutput}")
+                    print(f"{Output} State or Region:{IPinfoStateOrRegionOutput}")
+                    print(f"{Output} City:{IPinfoCityOutput}")
 
                 InfoOutput()
 
@@ -221,12 +248,12 @@ def Main():
 
                     output = [
 
-                        "Hostname: " + HostnameForIP, "\n",
-                        "IP Address: " + WebSiteIP, "\n",
-                        "ISP:" + IPinfoISPOutput, "\n",
-                        "Country:" + IPinfoCountryOutput, "\n",
-                        "State or Region:" + IPinfoStateOrRegionOutput, "\n",
-                        "City:" + IPinfoCityOutput, "\n"
+                        f"Hostname:{HostnameForIP} \n",
+                        f"IP Address:{WebSiteIP} \n",
+                        f"ISP:{IPinfoISPOutput} \n",
+                        f"Country:{IPinfoCountryOutput} \n",
+                        f"State or Region:{IPinfoStateOrRegionOutput}\n",
+                        f"City:{IPinfoCityOutput}\n"
                     ]
 
                     with open(HOSTNAMEFORTXT + '.txt', 'w') as file:
@@ -241,3 +268,9 @@ def Main():
     BasicInfo()
 
 Main()
+
+
+# WebsiteInfoGraber | Beta 1.1
+
+# Not A Bird
+# CEO of Bird Inc.
