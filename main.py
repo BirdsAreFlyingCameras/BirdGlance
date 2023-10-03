@@ -3,33 +3,26 @@ import socket as s
 import json
 from urllib.parse import urlparse
 from dns.resolver import *
+import sys
 
 from colorama import init, Fore, Back, Style
 
+from PyEnhance import Stamps
 
-class colors:
-    global CG, CR, CY, CW, CC, CM, TB
-    init(autoreset=True)
-    CG = Fore.GREEN
-    CR = Fore.RED
-    CY = Fore.YELLOW
-    CW = Fore.WHITE
-    CC = Fore.CYAN
-    CM = Fore.MAGENTA
-    TB = Style.BRIGHT
+Stamp = Stamps.Stamp
 
+Input = Stamp.Input
+Output = Stamp.Output
+Error = Stamp.Error
+Info = Stamp.Info
+Warn = Stamp.Warn
 
-class Stamps:
-    global Info, Warn, Output, Input, Error
-    Info = f'{CG}{TB}[INFO]{Fore.RESET}'
-    Warn = f'{CY}{TB}[WARRING]{Fore.RESET}'
-    Output = f'{CC}{TB}[OUTPUT]{Fore.RESET}'
-    Input = f'{CM}{TB}[INPUT]{Fore.RESET}'
-    Error = f'{CR}{TB}[ERROR]{Fore.RESET}'
-
-
+PostiveStatusCodes = [200, 301, 401, 403]
 
 def Main():
+
+    global URL
+
 
     SpecialCharacters = [
         '!', '"', '#', '$', '%', '&', "'", '(', ')', '*', '+', ',', '-',
@@ -55,7 +48,26 @@ def Main():
                 TLDS = [line.strip().lower() for line in response.text.splitlines() if not line.startswith('#')]
 
             FetchTLDS()
+            def CheckTLDS():
+                global TLDSValid
+                global URL
+                TLDSValid = False
+                for i in TLDS:
+                    if URL.endswith("/"):
+                        URL = URL[:-1]
+                    if URL.endswith(i):
+                        TLDSValid = True
+                        print(f"{Info} URL has a valid TLDS (.com, .org, .xyz, etc.)")
+                        break
 
+                if TLDSValid is False:
+                    input(f"{Error} URL does not have a valid TLDS Do you want to continue? [Y/N] ")
+                    if input == "y" or "Y":
+                        print("Continuing...")
+                    else:
+                        print("Exiting...")
+                        sys.exit()
+            CheckTLDS()
             def IsURLAnIP():
                 global IsURLAnIPOutput
 
@@ -75,6 +87,8 @@ def Main():
                 global URLHTTPS, URLHTTP  # Sets the variables URL HTTPS and URL HTTP to global variables meaning they can be called outside of this function.
                 global TLDSValid
                 TLDSValid = False
+
+
                 for i in "https://", "http://":
                     if URL.startswith(i):
                         if i == "https://":
@@ -85,24 +99,10 @@ def Main():
                             URLHTTPS = URL.replace("http://", "https://")
                         break
                     else:
-                        URLHTTP = "http://" + URL
-                        URLHTTPS = "https://" + URL
+                        URLHTTP = f"http://{URL}"
+                        URLHTTPS = f"https://{URL}"
 
-                for i in TLDS:
-                    if URL.endswith("/"):
-                        URL = URL[:-1]
-                    if URL.endswith(i):
-                        TLDSValid = True
-                        print(f"{Info} URL has a valid TLDS (.com,.org, etc.)")
-                        break
 
-                if TLDSValid is False:
-                    input("URL does not have a valid TLDS Do you want to continue? [Y/N] ")
-                    if input == "y" or "Y":
-                        print("Continuing...")
-                    else:
-                        print("Exiting...")
-                        exit()
 
             refactor(URL)  # Calls the refactor function with the parameter URL
 
@@ -114,7 +114,7 @@ def Main():
 
                     GetReqStatus = requests.get(url=URLHTTP)
 
-                    if GetReqStatus.status_code == 200:
+                    if GetReqStatus.status_code in PostiveStatusCodes:
                         print(f"{Info} HTTP Valid")
 
                         HTTPValid = True
@@ -169,25 +169,31 @@ def Main():
 
         def Stage3():
             def GetWebsiteIPInfo():
+                global Replace
                 def Country():
                     global IPinfoCountry
                     global IPinfoCountryOutput
 
-                    GetIpInfoCountry = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=1")
+                    URL = f'http://ip-api.com/json/{WebSiteIP}?fields=1'
+
+                    GetIpInfoCountry = requests.get(url=URL)
 
                     IPinfoCountry = json.loads(GetIpInfoCountry.text)
                     IPinfoCountry = json.dumps(IPinfoCountry)
 
-                    IPinfoCountryOutput = IPinfoCountry.replace("{", "").replace("}", "").replace(":", "") \
-                        .replace("country", "").replace('"', "")
-
+                    IPinfoCountryOutput = (IPinfoCountry.replace("{", "").replace("}", "")
+                                           .replace(":", "").replace("country", "")
+                                           .replace('"', ""))
+#
                 Country()
 
                 def StateOrRegion():
                     global IPinfoStateOrRegion
                     global IPinfoStateOrRegionOutput
 
-                    GetIpInfoStateOrRegion = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=8")
+                    URL = f'http://ip-api.com/json/{WebSiteIP}?fields=8'
+
+                    GetIpInfoStateOrRegion = requests.get(url=URL)
 
                     IPinfoStateOrRegion = json.loads(GetIpInfoStateOrRegion.text)
                     IPinfoStateOrRegion = json.dumps(IPinfoStateOrRegion)
@@ -201,7 +207,9 @@ def Main():
                     global IPinfoCity
                     global IPinfoCityOutput
 
-                    GetIpInfoCity = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=16")
+                    URL = f'http://ip-api.com/json/{WebSiteIP}?fields=16'
+
+                    GetIpInfoCity = requests.get(url=URL)
 
                     IPinfoCity = json.loads(GetIpInfoCity.text)
                     IPinfoCity = json.dumps(IPinfoCity)
@@ -215,7 +223,9 @@ def Main():
                     global IPinfoISP
                     global IPinfoISPOutput
 
-                    GetIPinfoISP = requests.get(url="http://ip-api.com/json/" + WebSiteIP + "?fields=512")
+                    URL = f'http://ip-api.com/json/{WebSiteIP}?fields=512'
+
+                    GetIPinfoISP = requests.get(url=URL)
 
                     IPinfoISP = json.loads(GetIPinfoISP.text)
                     IPinfoISP = json.dumps(IPinfoISP)
@@ -235,7 +245,7 @@ def Main():
                     global Info, Warn, Output, Input, Error
                     print('\n')
                     print(f"{Output} Hostname: {HostnameForIP}")
-                    print(f"{Output} IP Address:{WebSiteIP}")
+                    print(f"{Output} IP Address: {WebSiteIP}")
                     print(f"{Output} ISP:{IPinfoISPOutput}")
                     print(f"{Output} Country:{IPinfoCountryOutput}")
                     print(f"{Output} State or Region:{IPinfoStateOrRegionOutput}")
@@ -248,15 +258,15 @@ def Main():
 
                     output = [
 
-                        f"Hostname:{HostnameForIP} \n",
-                        f"IP Address:{WebSiteIP} \n",
+                        f"Hostname: {HostnameForIP} \n",
+                        f"IP Address: {WebSiteIP} \n",
                         f"ISP:{IPinfoISPOutput} \n",
                         f"Country:{IPinfoCountryOutput} \n",
                         f"State or Region:{IPinfoStateOrRegionOutput}\n",
                         f"City:{IPinfoCityOutput}\n"
                     ]
 
-                    with open(HOSTNAMEFORTXT + '.txt', 'w') as file:
+                    with open(f"{HOSTNAMEFORTXT}.txt", 'w') as file:
                         file.writelines(output)
 
                 InfoOutputTXT()
@@ -270,7 +280,9 @@ def Main():
 Main()
 
 
-# WebsiteInfoGraber | Beta 1.1
+# WebsiteInfoGraber Beta 1.1
+# Gets basic Info from a website URL
+
 
 # Not A Bird
 # CEO of Bird Inc.
