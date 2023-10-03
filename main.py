@@ -17,7 +17,7 @@ Error = Stamp.Error
 Info = Stamp.Info
 Warn = Stamp.Warn
 
-PostiveStatusCodes = [200, 301, 401, 403]
+PositiveStatusCodes = [200, 301, 401, 403]
 
 def Main():
 
@@ -83,7 +83,7 @@ def Main():
 
             IsURLAnIP()
 
-            def refactor(URL):  # defines the refactor function and passes the URL variable as a parameter
+            def Refactor(URL):  # defines the refactor function and passes the URL variable as a parameter
                 global URLHTTPS, URLHTTP  # Sets the variables URL HTTPS and URL HTTP to global variables meaning they can be called outside of this function.
                 global TLDSValid
                 TLDSValid = False
@@ -104,7 +104,7 @@ def Main():
 
 
 
-            refactor(URL)  # Calls the refactor function with the parameter URL
+            Refactor(URL)  # Calls the refactor function with the parameter URL
 
             def Checks():
 
@@ -114,7 +114,7 @@ def Main():
 
                     GetReqStatus = requests.get(url=URLHTTP)
 
-                    if GetReqStatus.status_code in PostiveStatusCodes:
+                    if GetReqStatus.status_code in PositiveStatusCodes:
                         print(f"{Info} HTTP Valid")
 
                         HTTPValid = True
@@ -128,9 +128,9 @@ def Main():
 
                     global HTTPSValid
 
-                    getreqstatus = requests.get(url=URLHTTPS)
+                    GetReqStatus = requests.get(url=URLHTTPS)
 
-                    if getreqstatus.status_code == 200:
+                    if GetReqStatus.status_code == 200:
                         print(f"{Info} HTTPS Valid")
 
                         HTTPSValid = True
