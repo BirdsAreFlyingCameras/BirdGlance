@@ -17,8 +17,9 @@ Error = Stamp.Error
 Info = Stamp.Info
 Warn = Stamp.Warn
 
-PositiveStatusCodes = [200, 301, 401, 403]
-
+PositiveStatusCodes = [200, 201, 202, 203, 204, 205, 206,
+                      300, 301, 302, 303, 304, 305, 307,
+                      308, 401]
 def Main():
 
     global URL
