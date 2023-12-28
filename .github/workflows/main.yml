@@ -10,5 +10,5 @@ jobs:
 
         with:
           PROJECT_PATH: .
-          REQUIREMENT_PATH: .github/workflows/requirements.txt
+          REQUIREMENT_PATH: ./.github/workflows/requirements.txt
           COMMIT_MESSAGE: "My custom commit message"
