@@ -1,16 +1,14 @@
-name: Integration Test
-on: [push, workflow_dispatch]
+name: Generate requirements.txt
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Self test
-        id: selftest
+      - name: Check requirements.txt
+        uses: ekvanox/pipreqs-action@master
 
-        uses: timmypidashev/auto-pipreqs-cpy@master
-
-        # Put an example of mandatory inputs here
         with:
-          PROJECT_PATH: .   #default is the root of the repository
-          REQUIREMENT_PATH: ./requirements.txt  #default is requirement.txt in the root of your repository 
+          PROJECT_PATH: .
+          REQUIREMENT_PATH: ./requirements.txt
+          COMMIT_MESSAGE: "My custom commit message"
