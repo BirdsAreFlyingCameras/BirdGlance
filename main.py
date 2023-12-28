@@ -281,7 +281,7 @@ def Main():
 Main()
 
 
-# WebsiteInfoGraber Beta 1.1
+# WebsiteInfoGraber Beta 1.4.1
 # Gets basic Info from a website URL
 
 
