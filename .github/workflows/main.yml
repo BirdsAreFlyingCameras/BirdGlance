@@ -9,6 +9,6 @@ jobs:
         uses: ekvanox/pipreqs-action@master
 
         with:
-          PROJECT_PATH: BirdGlance
-          REQUIREMENT_PATH: BirdGlance/requirements.txt
+          PROJECT_PATH: .
+          REQUIREMENT_PATH: requirements.txt
           COMMIT_MESSAGE: "My custom commit message"
