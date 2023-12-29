@@ -18,7 +18,7 @@ jobs:
 
     - name: Commit and Push requirements.txt
       env:
-        PERSONAL_TOKEN: ${{ secrets.AccessToken }}
+        PERSONAL_TOKEN: ${{ secrets.ACCESSTOKEN }}
       run: |
         git config --global user.name 'Bryan Brannan'
         git config --global user.email 'cantbeabird@example.com'
