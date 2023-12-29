@@ -1,14 +1,14 @@
-name: Generate requirements.txt
-on: [push, workflow_dispatch]
+name: Integration Test
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - name: Check requirements.txt
-        uses: ekvanox/pipreqs-action@master
+      - name: Automatic requirements.txt for Python Project
+        uses: ryan-rozario/pipreqs-action@master
 
+        # Put an example of mandatory inputs here
         with:
-          PROJECT_PATH: .
-          REQUIREMENT_PATH: requirements.txt
-          COMMIT_MESSAGE: "My custom commit message"
+          PROJECT_PATH: .   #default is the root of the repository
+          REQUIREMENT_PATH: ./requirements.txt  #default is requirement.txt in the root of your repository 
