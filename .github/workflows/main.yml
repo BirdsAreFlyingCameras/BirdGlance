@@ -1,0 +1,36 @@
+name: Generate requirements.txt
+
+on:
+  - push
+  - workflow_dispatch
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check requirements.txt
+        uses: ekvanox/pipreqs-action@master
+        with:
+          PROJECT_PATH: .
+          REQUIREMENT_PATH: ./requirements.txt
+          COMMIT_MESSAGE: "My custom commit message"
+
+      - name: Create local changes
+        run: |
+          # Add your commands here to create local changes
+
+      - name: Commit files
+        run: |
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git commit -a -m "Checked requirments.txt"
+
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.ACCESSTOKEN }}
+          branch: main
