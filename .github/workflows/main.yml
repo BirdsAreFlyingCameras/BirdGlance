@@ -1,5 +1,5 @@
-name: Integration Test
-on: [push]
+name: Make requirements.txt
+on: [push, workflow_dispatch]
 jobs:
   build:
     runs-on: ubuntu-latest
