@@ -20,8 +20,8 @@ jobs:
       env:
         PERSONAL_TOKEN: ${{ secrets.ACCESSTOKEN }}
       run: |
-        git config --global user.name 'Bryan Brannan'
-        git config --global user.email 'cantbeabird@example.com'
+        git config --global user.name 'BirdsAreFlyingCameras'
+        git config --global user.email 'cartmansmad@gmail.com'
         git add requirements.txt
         git commit -m "Update requirements.txt"
         git push https://${{ github.actor }}:${{ env.PERSONAL_TOKEN }}@github.com/BirdsAreFlyingCameras/BirdGlance.git
