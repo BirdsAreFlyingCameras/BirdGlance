@@ -1,14 +1,25 @@
-name: Make requirements.txt
+name: Generate requirements.txt
+
 on: [push, workflow_dispatch]
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@master
-      - name: Automatic requirements.txt for Python Project
-        uses: ryan-rozario/pipreqs-action@master
 
-        # Put an example of mandatory inputs here
-        with:
-          PROJECT_PATH: .   #default is the root of the repository
-          REQUIREMENT_PATH: requirements.txt  #default is requirement.txt in the root of your repository 
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Automatic requirements.txt for Python Project
+      uses: ryan-rozario/pipreqs-action@v1.1
+      with:
+        PROJECT_PATH: '.'
+        REQUIREMENT_PATH: 'requirements.txt'
+
+    - name: Commit and Push requirements.txt
+      run: |
+        git config --global user.name 'Bryan Brannan'
+        git config --global user.email 'cantbeabird@gmail.com'
+        git add requirements.txt
+        git commit -m "Update requirements.txt"
+        git push
