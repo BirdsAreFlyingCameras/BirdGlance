@@ -17,9 +17,12 @@ jobs:
         REQUIREMENT_PATH: 'requirements.txt'
 
     - name: Commit and Push requirements.txt
+      env:
+        PERSONAL_TOKEN: ${{ secrets.AccessToken }}
       run: |
         git config --global user.name 'Bryan Brannan'
-        git config --global user.email 'cantbeabird@gmail.com'
+        git config --global user.email 'cantbeabird@example.com'
         git add requirements.txt
         git commit -m "Update requirements.txt"
-        git push
+        git push https://${{ github.actor }}:${{ env.PERSONAL_TOKEN }}@github.com/BirdsAreFlyingCameras/BirdGlance.git
+
