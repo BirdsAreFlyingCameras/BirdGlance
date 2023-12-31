@@ -1,8 +1,9 @@
 import requests
 import socket as s
 import json
-from dns.resolver import *
+import sys
 from PyEnhance import Stamps
+from urllib.parse import urlparse
 
 Stamp = Stamps.Stamp
 
