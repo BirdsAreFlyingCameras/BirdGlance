@@ -1,12 +1,7 @@
 import requests
 import socket as s
 import json
-from urllib.parse import urlparse
 from dns.resolver import *
-import sys
-
-from colorama import init, Fore, Back, Style
-
 from PyEnhance import Stamps
 
 Stamp = Stamps.Stamp
@@ -69,6 +64,7 @@ def Main():
                         print("Exiting...")
                         sys.exit()
             CheckTLDS()
+
             def IsURLAnIP():
                 global IsURLAnIPOutput
 
