@@ -12,7 +12,7 @@
   the results in a .txt format.
 
   This was one of my first python projects of this nature, so I apologise for
-  any unsightly code to remedy this I plan on doing a rebase in the future.
+  any unsightly code to remedy this I plan on doing a full rewrite in the future.
 
 
 ## Installation
