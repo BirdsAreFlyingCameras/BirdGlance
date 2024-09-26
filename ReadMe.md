@@ -135,6 +135,3 @@ Then to run the script:
 
 Thank you to the people that run ip-api.com for providing their API 
 free of charge and registration. 
-
-
-***Not A Bird | CEO of Bird Inc.***
